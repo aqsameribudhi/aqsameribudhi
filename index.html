@@ -1,90 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>aqsameribudhi 💕</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <title>aqsameribudhi 💕</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-  body {
-    font-family: system-ui, Arial, sans-serif;
-    background: linear-gradient(#fff0f5, #ffe6ef);
-    margin: 0;
-    padding: 16px;
-    text-align: center;
-  }
+  <style>
+    body {
+      font-family: system-ui, Arial, sans-serif;
+      background: linear-gradient(#fff0f5, #ffe6ef);
+      margin: 0;
+      padding: 16px;
+      text-align: center;
+    }
 
-  h1 {
-    color: #d63384;
-    font-size: 28px;
-  }
+    h1 {
+      color: #d63384;
+      font-size: 28px;
+    }
 
-  .today {
-    background: white;
-    border-radius: 18px;
-    padding: 18px;
-    margin: 20px 0;
-    box-shadow: 0 6px 14px rgba(0,0,0,0.12);
-  }
+    .today {
+      background: white;
+      border-radius: 18px;
+      padding: 18px;
+      margin: 20px 0;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+    }
 
-  .today h2 {
-    color: #d63384;
-    margin-bottom: 12px;
-  }
+    .today h2 {
+      color: #d63384;
+      margin-bottom: 12px;
+    }
 
-  .section {
-    margin-top: 16px;
-    text-align: left;
-  }
+    .section {
+      margin-top: 16px;
+      text-align: left;
+    }
 
-  .section h3 {
-    margin: 6px 0;
-    color: #555;
-  }
+    .section h3 {
+      margin: 6px 0;
+      color: #555;
+    }
 
-  textarea {
-    width: 100%;
-    height: 120px;
-    border-radius: 12px;
-    padding: 12px;
-    border: 1px solid #ccc;
-    font-size: 15px;
-    resize: none;
-  }
+    textarea {
+      width: 100%;
+      height: 120px;
+      border-radius: 12px;
+      padding: 12px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+      resize: none;
+    }
 
-  .save-btn {
-    margin-top: 8px;
-    padding: 12px;
-    width: 100%;
-    border: none;
-    border-radius: 25px;
-    background: #d63384;
-    color: white;
-    font-size: 15px;
-    cursor: pointer;
-  }
+    .save-btn {
+      margin-top: 8px;
+      padding: 12px;
+      width: 100%;
+      border: none;
+      border-radius: 25px;
+      background: #d63384;
+      color: white;
+      font-size: 15px;
+      cursor: pointer;
+    }
 
-  .days {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
-    gap: 10px;
-    margin-top: 20px;
-  }
+    .days {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+      gap: 10px;
+      margin-top: 20px;
+    }
 
-  .day {
-    background: white;
-    padding: 14px;
-    border-radius: 14px;
-    cursor: pointer;
-    font-size: 14px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  }
+    .day {
+      background: white;
+      padding: 14px;
+      border-radius: 14px;
+      cursor: pointer;
+      font-size: 14px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
 
-  #editor {
-    display: none;
-    margin-top: 20px;
-  }
-</style>
+    #editor {
+      display: none;
+      margin-top: 20px;
+    }
+  </style>
 </head>
 
 <body>
@@ -109,7 +109,7 @@
   </div>
 </div>
 
-<!-- DAYS 1–15 -->
+<!-- DAYS 1–45 -->
 <div class="days" id="days"></div>
 
 <div id="editor">
@@ -129,21 +129,34 @@
 </div>
 
 <script>
-  // 🔴 SET DAY 1 DATE
-  const startDate = new Date("2026-01-01"); // change if needed
+  // 🔴 SET START DATE
+  const startDate = new Date("2026-01-01"); // The start date is January 1st, 2026
 
+  // Today's Date
   const today = new Date();
+
+  // Calculate the number of days passed since the start date
   const diffDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24)) + 1;
 
+  // Get the element to display today's message
   const todayTitle = document.getElementById("todayTitle");
-  todayTitle.innerText = "Day " + diffDays + " — Today 💭";
 
+  // Set up day title to display only the current day's message
+  if (diffDays <= 45) {
+    todayTitle.innerText = `Day ${diffDays}`;
+  } else {
+    todayTitle.innerText = `Day 45`;  // If day exceeds 45, show "Day 45"
+  }
+
+  // Store today's thoughts
   const myToday = document.getElementById("myToday");
   const herToday = document.getElementById("herToday");
 
+  // Fetch stored thoughts for today if already present
   myToday.value = localStorage.getItem("day" + diffDays + "_my") || "";
   herToday.value = localStorage.getItem("day" + diffDays + "_her") || "";
 
+  // Save thoughts function
   function saveToday(who) {
     const key = "day" + diffDays + "_" + who;
     const value = who === "my" ? myToday.value : herToday.value;
@@ -151,7 +164,7 @@
     alert("Saved ❤️");
   }
 
-  // PRESET DAYS 1–13 (MY THOUGHTS)
+  // PRESET DAYS 1–14 (MY THOUGHTS) - pre-filled messages for passed days
   const preset = {
     day1_my: "Day 1: Everything feels different without you.",
     day2_my: "Day 2: I keep checking my phone, hoping it’s you.",
@@ -165,8 +178,12 @@
     day10_my: "Day 10: Some days feel long without you.",
     day11_my: "Day 11: I’m learning patience because of you.",
     day12_my: "Day 12: Missing you comes in waves.",
-    day13_my: "Day 13: Almost there, holding hope."
+    day13_my: "Day 13: Almost there, holding hope.",
+    day14_my: "Day 14: We're one step closer to being together."
   };
+
+  // PRESET FUTURE DAYS (empty for future days)
+  const futurePreset = {};
 
   const daysDiv = document.getElementById("days");
   const editor = document.getElementById("editor");
@@ -175,26 +192,45 @@
   const dayTitle = document.getElementById("dayTitle");
   let currentDay = "";
 
-  for (let i = 1; i <= 15; i++) {
+  // Create days 1–45 and add them to the days container
+  for (let i = 1; i <= 45; i++) {
     const d = document.createElement("div");
     d.className = "day";
     d.innerText = "Day " + i;
+
+    // Show only up to the current day
+    if (i <= diffDays) {
+      d.style.display = 'block';  // Show the day button if it's the current day or earlier
+    } else {
+      d.style.display = 'none';  // Hide the day button if it's a future day
+    }
+
     d.onclick = () => openDay(i);
     daysDiv.appendChild(d);
 
-    if (preset["day" + i + "_my"] && !localStorage.getItem("day" + i + "_my")) {
-      localStorage.setItem("day" + i + "_my", preset["day" + i + "_my"]);
+    if (i <= 14) {
+      // For Day 1-14, pre-fill the messages
+      if (preset["day" + i + "_my"] && !localStorage.getItem("day" + i + "_my")) {
+        localStorage.setItem("day" + i + "_my", preset["day" + i + "_my"]);
+      }
+    } else {
+      // For future days, leave them empty
+      localStorage.setItem("day" + i + "_my", "");
     }
   }
 
+  // Open a specific day's editor
   function openDay(num) {
-    currentDay = num;
-    dayTitle.innerText = "Day " + num;
-    myBox.value = localStorage.getItem("day" + num + "_my") || "";
-    herBox.value = localStorage.getItem("day" + num + "_her") || "";
-    editor.style.display = "block";
+    if (num <= diffDays) {  // Only allow opening days up to the current day
+      currentDay = num;
+      dayTitle.innerText = "Day " + num;
+      myBox.value = localStorage.getItem("day" + num + "_my") || "";
+      herBox.value = localStorage.getItem("day" + num + "_her") || "";
+      editor.style.display = "block";
+    }
   }
 
+  // Save the thoughts for a day
   function saveClose() {
     localStorage.setItem("day" + currentDay + "_my", myBox.value);
     localStorage.setItem("day" + currentDay + "_her", herBox.value);
