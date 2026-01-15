@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>aqsameribudhi 💕</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
     body {
@@ -17,29 +17,39 @@
     h1 {
       color: #d63384;
       font-size: 28px;
+      margin: 8px 0 2px;
+    }
+
+    p {
+      margin: 0 0 14px;
+      color: #6b3b52;
+      font-size: 14px;
     }
 
     .today {
       background: white;
       border-radius: 18px;
       padding: 18px;
-      margin: 20px 0;
-      box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+      margin: 16px auto 18px;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+      max-width: 700px;
+      text-align: left;
     }
 
     .today h2 {
       color: #d63384;
-      margin-bottom: 12px;
+      margin: 0 0 12px;
+      text-align: center;
     }
 
     .section {
       margin-top: 16px;
-      text-align: left;
     }
 
     .section h3 {
       margin: 6px 0;
       color: #555;
+      font-size: 15px;
     }
 
     textarea {
@@ -47,9 +57,15 @@
       height: 120px;
       border-radius: 12px;
       padding: 12px;
-      border: 1px solid #ccc;
+      border: 1px solid #ddd;
       font-size: 15px;
       resize: none;
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: rgba(214, 51, 132, 0.45);
+      box-shadow: 0 0 0 3px rgba(214, 51, 132, 0.12);
     }
 
     .save-btn {
@@ -62,13 +78,21 @@
       color: white;
       font-size: 15px;
       cursor: pointer;
+      transition: transform 0.08s ease, opacity 0.2s ease;
+    }
+
+    .save-btn:active {
+      transform: scale(0.99);
     }
 
     .days {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
       gap: 10px;
-      margin-top: 20px;
+      margin-top: 12px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .day {
@@ -77,315 +101,582 @@
       border-radius: 14px;
       cursor: pointer;
       font-size: 14px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      user-select: none;
+      transition: transform 0.08s ease, box-shadow 0.2s ease;
+    }
+
+    .day:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 7px 16px rgba(0, 0, 0, 0.12);
     }
 
     #editor {
       display: none;
-      margin-top: 20px;
-    }
-
-    .image-container {
       margin-top: 16px;
-    }
-
-    .image-container img {
-      max-width: 100%;
-      border-radius: 12px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      background: white;
+      border-radius: 18px;
+      padding: 18px;
       box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
-      margin-top: 10px;
+      text-align: left;
     }
 
-    .upload-btn {
-      margin-top: 10px;
-      padding: 12px;
-      background: #f0b7c0;
-      border-radius: 25px;
-      cursor: pointer;
+    #editor h2 {
+      margin: 0 0 10px;
+      color: #d63384;
+      text-align: center;
+    }
+
+    /* ---------- Interactive Media Controls ---------- */
+
+    .media-block {
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px solid #f2d3e3;
+    }
+
+    .media-title {
+      margin: 0 0 10px;
+      color: #5b4a52;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .btn {
       border: none;
+      border-radius: 14px;
+      padding: 10px 12px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: transform 0.08s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      user-select: none;
+    }
+
+    .btn:active {
+      transform: scale(0.99);
+    }
+
+    .btn-primary {
+      background: #d63384;
       color: white;
     }
 
-    .uploaded-images {
+    .btn-soft {
+      background: #ffe0ef;
+      color: #a11d59;
+    }
+
+    .btn-danger {
+      background: #ff4d6d;
+      color: white;
+    }
+
+    .btn[disabled] {
+      opacity: 0.55;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .hint {
+      font-size: 12px;
+      color: #7a6871;
+      margin-top: 6px;
+    }
+
+    .status {
+      font-size: 12px;
+      color: #7a6871;
+      margin: 6px 0 0;
+    }
+
+    /* Photo previews */
+    .thumbs {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       margin-top: 10px;
     }
 
-    .uploaded-images img {
-      width: 100px;
-      height: 100px;
+    .thumb {
+      width: 92px;
+      height: 92px;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      background: #fff;
+    }
+
+    .thumb img {
+      width: 100%;
+      height: 100%;
       object-fit: cover;
-      border-radius: 10px;
+      display: block;
     }
 
-    /* Styling for voice recorder */
-    .voice-recorder-container {
-      margin-top: 20px;
-    }
-
-    .voice-recorder-btn {
-      margin-top: 10px;
-      padding: 12px;
-      background: #f0b7c0;
-      border-radius: 25px;
-      cursor: pointer;
-      border: none;
-      color: white;
-    }
-
-    .voice-container {
+    /* Audio list */
+    .audio-list {
+      display: grid;
+      gap: 10px;
       margin-top: 10px;
     }
 
-    .voice-container audio {
-      margin-top: 10px;
+    .audio-item {
+      background: #fff6fb;
+      border: 1px solid #ffd2e7;
+      padding: 10px;
+      border-radius: 12px;
+    }
+
+    .audio-item audio {
+      width: 100%;
+    }
+
+    /* Hide the real file input (we trigger it from the button) */
+    input[type="file"] {
+      display: none;
     }
   </style>
 </head>
 
 <body>
+  <h1>aqsameribudhi 💖</h1>
+  <p>riphah walon ki aesi ki tesi</p>
 
-<h1>aqsameribudhi 💖</h1>
-<p>riphah walon ki aesi ki tesi</p>
+  <!-- TODAY -->
+  <div class="today">
+    <h2 id="todayTitle"></h2>
 
-<!-- TODAY -->
-<div class="today">
-  <h2 id="todayTitle"></h2>
+    <div class="section">
+      <h3>💙 My Thoughts</h3>
+      <textarea id="myToday" placeholder="Write your thoughts..."></textarea>
+      <button class="save-btn" onclick="saveToday('my')">Save My Thoughts</button>
+    </div>
 
-  <div class="section">
-    <h3>💙 My Thoughts</h3>
-    <textarea id="myToday" placeholder="Write your thoughts..."></textarea>
-    <button class="save-btn" onclick="saveToday('my')">Save My Thoughts</button>
+    <div class="section">
+      <h3>💖 My Food Panda Thoughts</h3>
+      <textarea id="herToday" placeholder="Write your thoughts..."></textarea>
+      <button class="save-btn" onclick="saveToday('her')">Save My Food Panda Thoughts</button>
+    </div>
+
+    <!-- MEDIA (Today) -->
+    <div class="media-block">
+      <div class="media-title">📸 Memories (Photos)</div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" id="addPhotosBtn" type="button" onclick="triggerPhotoPick()">
+          📷 Add Photos
+        </button>
+        <button class="btn btn-soft" id="clearTodayPhotosBtn" type="button" onclick="clearPhotosForDay(currentDayNumber)">
+          🗑️ Clear Photos (Today)
+        </button>
+      </div>
+
+      <input id="photoInput" type="file" accept="image/*" multiple />
+      <div class="status" id="photoStatus">No photos added yet.</div>
+      <div class="thumbs" id="photoThumbs"></div>
+
+      <div class="media-title" style="margin-top:16px;">🎙️ Memories (Voice)</div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" id="startRecBtn" type="button" onclick="startRecording()">
+          ⏺️ Start Recording
+        </button>
+        <button class="btn btn-danger" id="stopRecBtn" type="button" onclick="stopRecording()" disabled>
+          ⏹️ Stop & Save
+        </button>
+        <button class="btn btn-soft" id="clearTodayVoicesBtn" type="button" onclick="clearVoicesForDay(currentDayNumber)">
+          🗑️ Clear Voice (Today)
+        </button>
+      </div>
+
+      <div class="status" id="voiceStatus">No voice notes yet.</div>
+      <div class="audio-list" id="voiceList"></div>
+
+      <div class="hint">
+        Tip: Photos/voice are saved in your browser. If you clear browser data, memories can disappear.
+      </div>
+    </div>
   </div>
 
-  <div class="section">
-    <h3>💖 My Food Panda Thoughts</h3>
-    <textarea id="herToday" placeholder="Write your Food Panda thoughts..."></textarea>
-    <button class="save-btn" onclick="saveToday('her')">Save My Food Panda Thoughts</button>
+  <!-- DAYS -->
+  <div class="days" id="days"></div>
+
+  <!-- EDITOR -->
+  <div id="editor">
+    <h2 id="dayTitle"></h2>
+
+    <div class="section">
+      <h3>💙 My Thoughts</h3>
+      <textarea id="myBox"></textarea>
+    </div>
+
+    <div class="section">
+      <h3>💖 My Food Panda Thoughts</h3>
+      <textarea id="herBox"></textarea>
+    </div>
+
+    <!-- MEDIA (Selected Day) -->
+    <div class="media-block">
+      <div class="media-title">📸 Photos for this day</div>
+      <div class="status" id="photoStatusEditor">No photos for this day.</div>
+      <div class="thumbs" id="photoThumbsEditor"></div>
+
+      <div class="media-title" style="margin-top:16px;">🎙️ Voice for this day</div>
+      <div class="status" id="voiceStatusEditor">No voice notes for this day.</div>
+      <div class="audio-list" id="voiceListEditor"></div>
+    </div>
+
+    <button class="save-btn" onclick="saveClose()">Save</button>
   </div>
 
-  <!-- Image Upload Section -->
-  <div class="image-container">
-    <input type="file" id="imageUpload" accept="image/*" multiple>
-    <button class="upload-btn" onclick="uploadImages()">Upload Memory Images</button>
-    <div class="uploaded-images" id="uploadedImages"></div> <!-- To display the images once uploaded -->
-  </div>
+  <script>
+    // ---------- DATE / DAY LOGIC ----------
+    const startDate = new Date("2026-01-01");
+    const today = new Date();
 
-  <!-- Voice Recording Section -->
-  <div class="voice-recorder-container">
-    <button class="voice-recorder-btn" onclick="startRecording()">Record Voice</button>
-    <button class="voice-recorder-btn" onclick="stopRecording()" disabled>Stop Recording</button>
-    <button class="voice-recorder-btn" onclick="playRecording()" disabled>Play Recording</button>
-    <div class="voice-container" id="voiceContainer"></div>
-  </div>
-</div>
-
-<!-- DAYS 1–45 -->
-<div class="days" id="days"></div>
-
-<div id="editor">
-  <h2 id="dayTitle"></h2>
-
-  <div class="section">
-    <h3>💙 My Thoughts</h3>
-    <textarea id="myBox"></textarea>
-  </div>
-
-  <div class="section">
-    <h3>💖 My Food Panda Thoughts</h3>
-    <textarea id="herBox"></textarea>
-  </div>
-
-  <button class="save-btn" onclick="saveClose()">Save</button>
-</div>
-
-<script>
-  // 🔴 SET START DATE
-  const startDate = new Date("2026-01-01"); // The start date is January 1st, 2026
-
-  // Today's Date
-  const today = new Date();
-
-  // Calculate the number of days passed since the start date
-  const diffDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24)) + 1;
-
-  // Get the element to display today's message
-  const todayTitle = document.getElementById("todayTitle");
-
-  // Set up day title to display only the current day's message
-  if (diffDays <= 45) {
-    todayTitle.innerText = `Day ${diffDays}`;
-  } else {
-    todayTitle.innerText = `Day 45`;  // If day exceeds 45, show "Day 45"
-  }
-
-  // Store today's thoughts
-  const myToday = document.getElementById("myToday");
-  const herToday = document.getElementById("herToday");
-
-  // Fetch stored thoughts for today if already present
-  myToday.value = localStorage.getItem("day" + diffDays + "_my") || "";
-  herToday.value = localStorage.getItem("day" + diffDays + "_her") || "";
-
-  // Save thoughts function
-  function saveToday(who) {
-    const key = "day" + diffDays + "_" + who;
-    const value = who === "my" ? myToday.value : herToday.value;
-    localStorage.setItem(key, value);
-    alert("Saved ❤️");
-  }
-
-  // PRESET DAYS 1–14 (MY THOUGHTS) - pre-filled messages for passed days
-  const preset = {
-    day1_my: "Day 1: Everything feels different without you.",
-    day2_my: "Day 2: I keep checking my phone, hoping it’s you.",
-    day3_my: "Day 3: Distance hurts, but love stays strong.",
-    day4_my: "Day 4: Missing you became part of my routine.",
-    day5_my: "Day 5: Even busy days end with your thoughts.",
-    day6_my: "Day 6: I smiled today because of a memory.",
-    day7_my: "Day 7: One week apart, still us.",
-    day8_my: "Day 8: Loving you feels calm and heavy together.",
-    day9_my: "Day 9: Random thought — your laugh is my favorite sound.",
-    day10_my: "Day 10: Some days feel long without you.",
-    day11_my: "Day 11: I’m learning patience because of you.",
-    day12_my: "Day 12: Missing you comes in waves.",
-    day13_my: "Day 13: Almost there, holding hope.",
-    day14_my: "Day 14: We're one step closer to being together."
-  };
-
-  // PRESET FUTURE DAYS (empty for future days)
-  const futurePreset = {};
-
-  const daysDiv = document.getElementById("days");
-  const editor = document.getElementById("editor");
-  const myBox = document.getElementById("myBox");
-  const herBox = document.getElementById("herBox");
-  const dayTitle = document.getElementById("dayTitle");
-  let currentDay = "";
-
-  // Create days 1–45 and add them to the days container
-  for (let i = 1; i <= 45; i++) {
-    const d = document.createElement("div");
-    d.className = "day";
-    d.innerText = "Day " + i;
-
-    // Show only up to the current day
-    if (i <= diffDays) {
-      d.style.display = 'block';  // Show the day button if it's the current day or earlier
-    } else {
-      d.style.display = 'none';  // Hide the day button if it's a future day
+    // Normalize to local midnight to avoid timezone/hour issues
+    function toMidnight(d) {
+      return new Date(d.getFullYear(), d.getMonth(), d.getDate());
     }
 
-    d.onclick = () => openDay(i);
-    daysDiv.appendChild(d);
+    const diffDays =
+      Math.floor((toMidnight(today) - toMidnight(startDate)) / (1000 * 60 * 60 * 24)) + 1;
 
-    if (i <= 14) {
-      // For Day 1-14, pre-fill the messages
-      if (preset["day" + i + "_my"] && !localStorage.getItem("day" + i + "_my")) {
-        localStorage.setItem("day" + i + "_my", preset["day" + i + "_my"]);
+    const MAX_DAYS = 45;
+    const currentDayNumber = Math.min(Math.max(diffDays, 1), MAX_DAYS);
+
+    document.getElementById("todayTitle").innerText = `Day ${currentDayNumber}`;
+
+    // ---------- TEXT STORAGE ----------
+    const myToday = document.getElementById("myToday");
+    const herToday = document.getElementById("herToday");
+
+    myToday.value = localStorage.getItem("day" + currentDayNumber + "_my") || "";
+    herToday.value = localStorage.getItem("day" + currentDayNumber + "_her") || "";
+
+    function saveToday(who) {
+      const key = "day" + currentDayNumber + "_" + who;
+      const value = who === "my" ? myToday.value : herToday.value;
+      localStorage.setItem(key, value);
+      alert("Saved ❤️");
+    }
+
+    // Pre-fill ONLY for past days you want (1–14) IF not already saved
+    const preset = {
+      day1_my: "Day 1: Everything feels different without you.",
+      day2_my: "Day 2: I keep checking my phone, hoping it’s you.",
+      day3_my: "Day 3: Distance hurts, but love stays strong.",
+      day4_my: "Day 4: Missing you became part of my routine.",
+      day5_my: "Day 5: Even busy days end with your thoughts.",
+      day6_my: "Day 6: I smiled today because of a memory.",
+      day7_my: "Day 7: One week apart, still us.",
+      day8_my: "Day 8: Loving you feels calm and heavy together.",
+      day9_my: "Day 9: Random thought — your laugh is my favorite sound.",
+      day10_my: "Day 10: Some days feel long without you.",
+      day11_my: "Day 11: I’m learning patience because of you.",
+      day12_my: "Day 12: Missing you comes in waves.",
+      day13_my: "Day 13: Almost there, holding hope.",
+      day14_my: "Day 14: We're one step closer to being together."
+    };
+
+    for (let i = 1; i <= 14; i++) {
+      const k = "day" + i + "_my";
+      if (preset["day" + i + "_my"] && !localStorage.getItem(k)) {
+        localStorage.setItem(k, preset["day" + i + "_my"]);
       }
-    } else {
-      // For future days, leave them empty
-      localStorage.setItem("day" + i + "_my", "");
     }
-  }
 
-  // Open a specific day's editor
-  function openDay(num) {
-    if (num <= diffDays) {  // Only allow opening days up to the current day
-      currentDay = num;
+    // ---------- DAYS GRID (ONLY SHOW UP TO CURRENT DAY) ----------
+    const daysDiv = document.getElementById("days");
+    const editor = document.getElementById("editor");
+    const myBox = document.getElementById("myBox");
+    const herBox = document.getElementById("herBox");
+    const dayTitle = document.getElementById("dayTitle");
+
+    let openedDay = null;
+
+    for (let i = 1; i <= currentDayNumber; i++) {
+      const d = document.createElement("div");
+      d.className = "day";
+      d.innerText = "Day " + i;
+      d.onclick = () => openDay(i);
+      daysDiv.appendChild(d);
+    }
+
+    function openDay(num) {
+      openedDay = num;
       dayTitle.innerText = "Day " + num;
       myBox.value = localStorage.getItem("day" + num + "_my") || "";
       herBox.value = localStorage.getItem("day" + num + "_her") || "";
-      showImagesForDay(num);
-      showVoiceForDay(num);
+
+      renderPhotosForDay(num, "editor");
+      renderVoicesForDay(num, "editor");
+
       editor.style.display = "block";
+      window.scrollTo({ top: editor.offsetTop - 10, behavior: "smooth" });
     }
-  }
 
-  // Show all images for the selected day
-  function showImagesForDay(num) {
-    const imageContainer = document.getElementById("uploadedImages");
-    const images = JSON.parse(localStorage.getItem("day" + num + "_images")) || [];
+    function saveClose() {
+      if (!openedDay) return;
+      localStorage.setItem("day" + openedDay + "_my", myBox.value);
+      localStorage.setItem("day" + openedDay + "_her", herBox.value);
+      editor.style.display = "none";
+    }
 
-    // Clear any existing images
-    imageContainer.innerHTML = '';
+    // ---------- PHOTOS (MULTIPLE) ----------
+    const photoInput = document.getElementById("photoInput");
+    const photoThumbs = document.getElementById("photoThumbs");
+    const photoStatus = document.getElementById("photoStatus");
 
-    // Display all uploaded images
-    images.forEach(imageSrc => {
-      const imgTag = document.createElement("img");
-      imgTag.src = imageSrc;
-      imageContainer.appendChild(imgTag);
+    const photoThumbsEditor = document.getElementById("photoThumbsEditor");
+    const photoStatusEditor = document.getElementById("photoStatusEditor");
+
+    function photosKey(day) {
+      return "day" + day + "_photos";
+    }
+
+    function getPhotos(day) {
+      try {
+        return JSON.parse(localStorage.getItem(photosKey(day)) || "[]");
+      } catch {
+        return [];
+      }
+    }
+
+    function setPhotos(day, arr) {
+      localStorage.setItem(photosKey(day), JSON.stringify(arr));
+    }
+
+    function triggerPhotoPick() {
+      photoInput.click();
+    }
+
+    photoInput.addEventListener("change", async () => {
+      const files = Array.from(photoInput.files || []);
+      if (!files.length) return;
+
+      // Read all selected images -> base64
+      const existing = getPhotos(currentDayNumber);
+
+      for (const file of files) {
+        const dataUrl = await readFileAsDataURL(file);
+        existing.push(dataUrl);
+      }
+
+      setPhotos(currentDayNumber, existing);
+      photoInput.value = "";
+      renderPhotosForDay(currentDayNumber, "today");
+      alert("Photos saved ❤️");
     });
-  }
 
-  // Show all voice recordings for the selected day
-  function showVoiceForDay(num) {
-    const voiceContainer = document.getElementById("voiceContainer");
-    const voices = JSON.parse(localStorage.getItem("day" + num + "_voices")) || [];
+    function readFileAsDataURL(file) {
+      return new Promise((resolve, reject) => {
+        const r = new FileReader();
+        r.onload = () => resolve(r.result);
+        r.onerror = reject;
+        r.readAsDataURL(file);
+      });
+    }
 
-    // Clear any existing voice recordings
-    voiceContainer.innerHTML = '';
+    function clearPhotosForDay(day) {
+      if (!confirm("Remove all photos for this day?")) return;
+      setPhotos(day, []);
+      renderPhotosForDay(day, "today");
+      if (openedDay === day) renderPhotosForDay(day, "editor");
+    }
 
-    // Display all uploaded voice recordings
-    voices.forEach(voiceSrc => {
-      const audioTag = document.createElement("audio");
-      audioTag.controls = true;
-      audioTag.src = voiceSrc;
-      voiceContainer.appendChild(audioTag);
-    });
-  }
+    function renderPhotosForDay(day, where) {
+      const photos = getPhotos(day);
 
-  // Save the thoughts for a day
-  function saveClose() {
-    localStorage.setItem("day" + currentDay + "_my", myBox.value);
-    localStorage.setItem("day" + currentDay + "_her", herBox.value);
-    editor.style.display = "none";
-  }
+      if (where === "today") {
+        photoThumbs.innerHTML = "";
+        if (!photos.length) {
+          photoStatus.textContent = "No photos added yet.";
+          return;
+        }
+        photoStatus.textContent = photos.length + " photo(s) saved for Day " + day + ".";
+        photos.forEach(src => {
+          const wrap = document.createElement("div");
+          wrap.className = "thumb";
+          const img = document.createElement("img");
+          img.src = src;
+          wrap.appendChild(img);
+          photoThumbs.appendChild(wrap);
+        });
+      } else {
+        photoThumbsEditor.innerHTML = "";
+        if (!photos.length) {
+          photoStatusEditor.textContent = "No photos for this day.";
+          return;
+        }
+        photoStatusEditor.textContent = photos.length + " photo(s) for Day " + day + ".";
+        photos.forEach(src => {
+          const wrap = document.createElement("div");
+          wrap.className = "thumb";
+          const img = document.createElement("img");
+          img.src = src;
+          wrap.appendChild(img);
+          photoThumbsEditor.appendChild(wrap);
+        });
+      }
+    }
 
-  // Voice recording variables
-  let mediaRecorder;
-  let audioChunks = [];
+    // Render today photos on load
+    renderPhotosForDay(currentDayNumber, "today");
 
-  // Start voice recording
-  function startRecording() {
-    navigator.mediaDevices.getUserMedia({ audio: true })
-      .then(stream => {
-        mediaRecorder = new MediaRecorder(stream);
-        mediaRecorder.ondataavailable = event => {
-          audioChunks.push(event.data);
+    // ---------- VOICE (MULTIPLE) ----------
+    const startRecBtn = document.getElementById("startRecBtn");
+    const stopRecBtn = document.getElementById("stopRecBtn");
+    const voiceStatus = document.getElementById("voiceStatus");
+    const voiceList = document.getElementById("voiceList");
+
+    const voiceStatusEditor = document.getElementById("voiceStatusEditor");
+    const voiceListEditor = document.getElementById("voiceListEditor");
+
+    function voicesKey(day) {
+      return "day" + day + "_voices";
+    }
+
+    function getVoices(day) {
+      try {
+        return JSON.parse(localStorage.getItem(voicesKey(day)) || "[]");
+      } catch {
+        return [];
+      }
+    }
+
+    function setVoices(day, arr) {
+      localStorage.setItem(voicesKey(day), JSON.stringify(arr));
+    }
+
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let streamRef = null;
+
+    async function startRecording() {
+      try {
+        streamRef = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(streamRef);
+        audioChunks = [];
+
+        mediaRecorder.ondataavailable = (e) => {
+          if (e.data && e.data.size > 0) audioChunks.push(e.data);
         };
-        mediaRecorder.onstop = () => {
-          const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-          const audioUrl = URL.createObjectURL(audioBlob);
-          saveVoice(audioUrl);
-          audioChunks = [];
+
+        mediaRecorder.onstop = async () => {
+          const blob = new Blob(audioChunks, { type: "audio/webm" });
+          const base64 = await blobToBase64(blob);
+
+          const existing = getVoices(currentDayNumber);
+          existing.push(base64);
+          setVoices(currentDayNumber, existing);
+
+          renderVoicesForDay(currentDayNumber, "today");
+          alert("Voice note saved ❤️");
+
+          // stop mic
+          if (streamRef) {
+            streamRef.getTracks().forEach(t => t.stop());
+            streamRef = null;
+          }
         };
+
         mediaRecorder.start();
-        alert("Recording started. Click 'Stop Recording' to stop.");
-      })
-      .catch(error => console.error("Error accessing microphone:", error));
-  }
 
-  // Stop voice recording
-  function stopRecording() {
-    if (mediaRecorder) {
-      mediaRecorder.stop();
-      alert("Recording stopped.");
+        startRecBtn.disabled = true;
+        stopRecBtn.disabled = false;
+        voiceStatus.textContent = "Recording... click 'Stop & Save' to save.";
+      } catch (err) {
+        alert("Microphone permission denied or not available.");
+        console.error(err);
+      }
     }
-  }
 
-  // Save voice recording
-  function saveVoice(voiceSrc) {
-    const voices = JSON.parse(localStorage.getItem("day" + diffDays + "_voices")) || [];
-    voices.push(voiceSrc);
-    localStorage.setItem("day" + diffDays + "_voices", JSON.stringify(voices));
-    showVoiceForDay(diffDays); // Show the newly recorded voices
-  }
-</script>
+    function stopRecording() {
+      if (!mediaRecorder) return;
+      if (mediaRecorder.state !== "inactive") mediaRecorder.stop();
 
+      startRecBtn.disabled = false;
+      stopRecBtn.disabled = true;
+      voiceStatus.textContent = "Saving voice note...";
+    }
+
+    function blobToBase64(blob) {
+      return new Promise((resolve, reject) => {
+        const r = new FileReader();
+        r.onloadend = () => resolve(r.result);
+        r.onerror = reject;
+        r.readAsDataURL(blob);
+      });
+    }
+
+    function clearVoicesForDay(day) {
+      if (!confirm("Remove all voice notes for this day?")) return;
+      setVoices(day, []);
+      renderVoicesForDay(day, "today");
+      if (openedDay === day) renderVoicesForDay(day, "editor");
+    }
+
+    function renderVoicesForDay(day, where) {
+      const voices = getVoices(day);
+
+      if (where === "today") {
+        voiceList.innerHTML = "";
+        if (!voices.length) {
+          voiceStatus.textContent = "No voice notes yet.";
+          return;
+        }
+        voiceStatus.textContent = voices.length + " voice note(s) saved for Day " + day + ".";
+        voices.forEach((src) => {
+          const item = document.createElement("div");
+          item.className = "audio-item";
+          const audio = document.createElement("audio");
+          audio.controls = true;
+          audio.src = src;
+          item.appendChild(audio);
+          voiceList.appendChild(item);
+        });
+      } else {
+        voiceListEditor.innerHTML = "";
+        if (!voices.length) {
+          voiceStatusEditor.textContent = "No voice notes for this day.";
+          return;
+        }
+        voiceStatusEditor.textContent = voices.length + " voice note(s) for Day " + day + ".";
+        voices.forEach((src) => {
+          const item = document.createElement("div");
+          item.className = "audio-item";
+          const audio = document.createElement("audio");
+          audio.controls = true;
+          audio.src = src;
+          item.appendChild(audio);
+          voiceListEditor.appendChild(item);
+        });
+      }
+    }
+
+    // Render today voices on load
+    renderVoicesForDay(currentDayNumber, "today");
+  </script>
 </body>
 </html>
+
 
