@@ -84,6 +84,64 @@
       display: none;
       margin-top: 20px;
     }
+
+    .image-container {
+      margin-top: 16px;
+    }
+
+    .image-container img {
+      max-width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+      margin-top: 10px;
+    }
+
+    .upload-btn {
+      margin-top: 10px;
+      padding: 12px;
+      background: #f0b7c0;
+      border-radius: 25px;
+      cursor: pointer;
+      border: none;
+      color: white;
+    }
+
+    .uploaded-images {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .uploaded-images img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    /* Styling for voice recorder */
+    .voice-recorder-container {
+      margin-top: 20px;
+    }
+
+    .voice-recorder-btn {
+      margin-top: 10px;
+      padding: 12px;
+      background: #f0b7c0;
+      border-radius: 25px;
+      cursor: pointer;
+      border: none;
+      color: white;
+    }
+
+    .voice-container {
+      margin-top: 10px;
+    }
+
+    .voice-container audio {
+      margin-top: 10px;
+    }
   </style>
 </head>
 
@@ -106,6 +164,21 @@
     <h3>💖 My Food Panda Thoughts</h3>
     <textarea id="herToday" placeholder="Write your Food Panda thoughts..."></textarea>
     <button class="save-btn" onclick="saveToday('her')">Save My Food Panda Thoughts</button>
+  </div>
+
+  <!-- Image Upload Section -->
+  <div class="image-container">
+    <input type="file" id="imageUpload" accept="image/*" multiple>
+    <button class="upload-btn" onclick="uploadImages()">Upload Memory Images</button>
+    <div class="uploaded-images" id="uploadedImages"></div> <!-- To display the images once uploaded -->
+  </div>
+
+  <!-- Voice Recording Section -->
+  <div class="voice-recorder-container">
+    <button class="voice-recorder-btn" onclick="startRecording()">Record Voice</button>
+    <button class="voice-recorder-btn" onclick="stopRecording()" disabled>Stop Recording</button>
+    <button class="voice-recorder-btn" onclick="playRecording()" disabled>Play Recording</button>
+    <div class="voice-container" id="voiceContainer"></div>
   </div>
 </div>
 
@@ -226,8 +299,43 @@
       dayTitle.innerText = "Day " + num;
       myBox.value = localStorage.getItem("day" + num + "_my") || "";
       herBox.value = localStorage.getItem("day" + num + "_her") || "";
+      showImagesForDay(num);
+      showVoiceForDay(num);
       editor.style.display = "block";
     }
+  }
+
+  // Show all images for the selected day
+  function showImagesForDay(num) {
+    const imageContainer = document.getElementById("uploadedImages");
+    const images = JSON.parse(localStorage.getItem("day" + num + "_images")) || [];
+
+    // Clear any existing images
+    imageContainer.innerHTML = '';
+
+    // Display all uploaded images
+    images.forEach(imageSrc => {
+      const imgTag = document.createElement("img");
+      imgTag.src = imageSrc;
+      imageContainer.appendChild(imgTag);
+    });
+  }
+
+  // Show all voice recordings for the selected day
+  function showVoiceForDay(num) {
+    const voiceContainer = document.getElementById("voiceContainer");
+    const voices = JSON.parse(localStorage.getItem("day" + num + "_voices")) || [];
+
+    // Clear any existing voice recordings
+    voiceContainer.innerHTML = '';
+
+    // Display all uploaded voice recordings
+    voices.forEach(voiceSrc => {
+      const audioTag = document.createElement("audio");
+      audioTag.controls = true;
+      audioTag.src = voiceSrc;
+      voiceContainer.appendChild(audioTag);
+    });
   }
 
   // Save the thoughts for a day
@@ -236,7 +344,48 @@
     localStorage.setItem("day" + currentDay + "_her", herBox.value);
     editor.style.display = "none";
   }
+
+  // Voice recording variables
+  let mediaRecorder;
+  let audioChunks = [];
+
+  // Start voice recording
+  function startRecording() {
+    navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(stream => {
+        mediaRecorder = new MediaRecorder(stream);
+        mediaRecorder.ondataavailable = event => {
+          audioChunks.push(event.data);
+        };
+        mediaRecorder.onstop = () => {
+          const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+          const audioUrl = URL.createObjectURL(audioBlob);
+          saveVoice(audioUrl);
+          audioChunks = [];
+        };
+        mediaRecorder.start();
+        alert("Recording started. Click 'Stop Recording' to stop.");
+      })
+      .catch(error => console.error("Error accessing microphone:", error));
+  }
+
+  // Stop voice recording
+  function stopRecording() {
+    if (mediaRecorder) {
+      mediaRecorder.stop();
+      alert("Recording stopped.");
+    }
+  }
+
+  // Save voice recording
+  function saveVoice(voiceSrc) {
+    const voices = JSON.parse(localStorage.getItem("day" + diffDays + "_voices")) || [];
+    voices.push(voiceSrc);
+    localStorage.setItem("day" + diffDays + "_voices", JSON.stringify(voices));
+    showVoiceForDay(diffDays); // Show the newly recorded voices
+  }
 </script>
 
 </body>
 </html>
+
